@@ -1,12 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_astha/apptheme.dart';
+
 import 'package:metro_astha/models/user.dart';
+
 import 'package:metro_astha/session.dart';
+import 'package:metro_astha/views/login.dart';
+import 'package:metro_astha/views/registration.dart';
+
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 void main() async{
     WidgetsFlutterBinding.ensureInitialized(); 
+    Firebase.initializeApp(); 
+
     var dbpath=await getDatabasesPath() ; 
     var dbstore=join(dbpath,'appuser');
     if(!await databaseExists(dbstore)){
@@ -17,7 +26,7 @@ void main() async{
     Database database; 
     
 
-    User user=User.anonymous(); 
+    AppUser user=AppUser.anonymous(); 
     openDatabase(dbstore,
         version: 1,
         onCreate: (db, version) {
@@ -25,54 +34,58 @@ void main() async{
           db.execute("create table user(username varchar,mobileno varchar) "); 
         },
         onOpen: (db)async{
-              database=db;               
+              database=db;            
+              var users = await database.query("user");   
+              if(users.length==1){
+                user=AppUser.fromMap(users.first); 
+              }
               print("Opened ");   
         }
     ).whenComplete(() {
         Session session=Session(database,user); 
         session.start(); 
-        runApp(MetroApp());
+        runApp(MetroApp(session));
         print("App Started"); 
     });
     
 }
 
-class MyApp extends StatelessWidget {
-  
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: apptheme,
-      home: Center(child: Text("MYAPP"),),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-         return null ; 
-  }
-}
 
 class MetroApp extends StatefulWidget {
+  final Session session ; 
+  MetroApp(this.session);  
+
   @override
   _MetroAppState createState() => _MetroAppState();
 }
 
 class _MetroAppState extends State<MetroApp> {
+  
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    
+    return MultiProvider(providers: [
+        ChangeNotifierProvider.value(value: widget.session.appState                        
+        ),
+        Provider<Session>.value(value: widget.session)
+        
+    ]  ,
+      builder:(context,child)=>MaterialApp(
+          theme: apptheme,
+          onGenerateRoute: (settings){
+              switch(settings.name){
+                   case '/':
+                      return MaterialPageRoute(builder: (context)=> LoginPage() );
+                      break;
+                    case '/register':
+                       return MaterialPageRoute(builder: (context)=> RegistrationPage()   );
+                       break;
+                    
+              }
+              return MaterialPageRoute(builder: (context)=>LoginPage());
+          },
+      ),
+
     );
   }
 }

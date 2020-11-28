@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "287851683622",
+    "firebase_url": "https://astha-9d54e.firebaseio.com",
+    "project_id": "astha-9d54e",
+    "storage_bucket": "astha-9d54e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:287851683622:android:b41a62a326961d4ba46be7",
+        "android_client_info": {
+          "package_name": "com.example.metro_astha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "287851683622-jtfnshmibvor16qf820icmjcvfudk4r2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfv2hQ50LbyBm5j8WpfUJHhlBUj6oVtKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "287851683622-jtfnshmibvor16qf820icmjcvfudk4r2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
