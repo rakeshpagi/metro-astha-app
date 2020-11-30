@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:metro_astha/models/user.dart';
@@ -13,10 +15,14 @@ class Session{
         Session(this.database,this.user);                 
         get anonymous=>this.user.anonymous; 
          UserCredential userCredential;
+         StreamController<Message> messaging = StreamController.broadcast(); 
         start()async {
              
               firestore=FirebaseFirestore.instance; 
               userCredential = await FirebaseAuth.instance.signInAnonymously();
+        }
+        sendMessage(String m){
+              messaging.sink.add(Message(m));
         }
         login(String userid,String password)async{
                  appState.setbusy();
@@ -43,10 +49,18 @@ class Session{
                  }
                  if(list.docs.length>0){
                       print('Already Registered'); 
+                      sendMessage('Already Registered') ; 
+                      return list.docs.first ;
                  }
 
                   var result = await users.add(newuser.toMap());
-                  return result ;  
+                  
+                  return await result.get() ;  
+        }
+        get messagestream=>messaging.stream;
+
+        dispose(){
+              messaging.close();  
         }
 }
 
@@ -62,4 +76,10 @@ class AppState extends ChangeNotifier{
         _busy=false;notifyListeners(); 
     }
 
+}
+
+class Message{
+      String  title; 
+      Message(this.title); 
+      
 }

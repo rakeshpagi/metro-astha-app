@@ -60,7 +60,12 @@ class MetroApp extends StatefulWidget {
 }
 
 class _MetroAppState extends State<MetroApp> {
-  
+  @override
+  void dispose() {
+    
+    super.dispose();
+    widget.session.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     

@@ -74,16 +74,22 @@ class _LoginPageState extends MetroAppPageState {
   }
 }
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
   final FocusNode focususer=FocusNode();
+  TextEditingController mobilenocontroller=TextEditingController(),passwordcontroller=TextEditingController();  
   @override
   Widget build(BuildContext context) {
     
     return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          LoginField(label:'UserName',iconlabel: Icons.perm_identity  ),
-          LoginField(label: 'PassWord',iconlabel:Icons.lock_open,obscure: true,),          
+          LoginField(label:'MobileNo',iconlabel: Icons.perm_identity,textEditingController: mobilenocontroller,),
+          LoginField(label: 'PassWord',iconlabel:Icons.lock_open,obscure: true,textEditingController: passwordcontroller,),          
           Row(  
               mainAxisAlignment: MainAxisAlignment.end, children: [Padding(
             padding: const EdgeInsets.all(8.0),
@@ -91,8 +97,9 @@ class LoginForm extends StatelessWidget {
           )],),
           SizedBox(height:15),
           MaterialButton(onPressed: (){
-
-                   context.read<Session>().login('test','test' ); 
+                   
+                   context.read<Session>().login(mobilenocontroller.text,passwordcontroller.text ); 
+                   
           }, child: Text('Sign In'),color: Colors.pinkAccent,padding: EdgeInsets.all(15), )
     ],);
   }
@@ -102,7 +109,8 @@ class LoginField extends StatelessWidget {
   final String  label; 
   final IconData iconlabel; 
   final bool obscure;
-  LoginField({this.label,this.iconlabel,this.obscure=false,});
+  final TextEditingController textEditingController; 
+  LoginField({this.label,this.iconlabel,this.obscure=false,this.textEditingController});
   @override
   Widget build(BuildContext context) {
     return TextField(

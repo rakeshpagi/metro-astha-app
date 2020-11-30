@@ -9,9 +9,15 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class RegistrationPageState extends MetroAppPageState {
+  TextEditingController namecontroller = TextEditingController() ,
+        mobilenocontroller=TextEditingController(),passwordcontroller=TextEditingController(); 
+   
   @override
   Widget buildpage(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var namefield=RegisterField(label: 'Name',iconlabel: Icons.perm_identity, textcontroller: namecontroller, ); 
+    var mobilenofield=RegisterField(label: 'Mobile No',iconlabel: Icons.mobile_friendly,textcontroller: mobilenocontroller, ) ; 
+    var passwordfield=RegisterField(label: 'PassWord',iconlabel: Icons.lock_open,obscure: true,textcontroller: passwordcontroller,); 
     return  CustomScrollView(
       
        slivers: [
@@ -19,14 +25,20 @@ class RegistrationPageState extends MetroAppPageState {
                title: Text('Register'),expandedHeight: size.height*0.3,elevation: 5,floating: true,
            ),
            SliverList(delegate: SliverChildListDelegate([
-              RegisterField(label: 'Name',iconlabel: Icons.perm_identity),
-              RegisterField(label: 'Mobile No',iconlabel: Icons.mobile_friendly ) ,
-              RegisterField(label: 'PassWord',iconlabel: Icons.lock_open,obscure: true,),
+              namefield,
+              mobilenofield,
+              passwordfield,
               SizedBox(height: 25,),
               RaisedButton(onPressed: ()async{
-                      var user = await context.read<Session>().doregister(AppUser(mobileno: '123456789',username: 'NAME')); 
-                      print("Response $user ");
-              },child: Text("Register"),padding: EdgeInsets.all(15),
+                      print("Saving  ${namecontroller.text}");
+                      AppUser newuser=AppUser(mobileno: mobilenocontroller.text,
+                        username: namecontroller.text,
+                        password: passwordcontroller.text
+                        );
+                        
+                        var user = await context.read<Session>().doregister(newuser); 
+                        print("Response ${user['username']} ");
+                      },child: Text("Register"),padding: EdgeInsets.all(15),
               )
            ], ),)
        ],
@@ -38,7 +50,8 @@ class RegisterField extends StatelessWidget {
   final String  label; 
   final IconData iconlabel; 
   final bool obscure;
-  RegisterField({this.label,this.iconlabel,this.obscure=false});
+  final textcontroller; 
+  RegisterField({this.label,this.iconlabel,this.obscure=false,this.textcontroller});
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -46,7 +59,8 @@ class RegisterField extends StatelessWidget {
               labelText: label,              
                                              
         ), 
-          obscureText: obscure,
+          obscureText: obscure,controller: textcontroller,
         );          
   }
+  
 }
