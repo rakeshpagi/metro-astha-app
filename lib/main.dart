@@ -7,6 +7,7 @@ import 'package:metro_astha/models/user.dart';
 import 'package:metro_astha/session.dart';
 import 'package:metro_astha/views/login.dart';
 import 'package:metro_astha/views/registration.dart';
+import 'package:metro_astha/views/userhome.dart';
 
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,8 @@ import 'package:sqflite/sqflite.dart';
 
 void main() async{
     WidgetsFlutterBinding.ensureInitialized(); 
-    Firebase.initializeApp(); 
-
+    await Firebase.initializeApp(); 
+    
     var dbpath=await getDatabasesPath() ; 
     var dbstore=join(dbpath,'appuser');
     if(!await databaseExists(dbstore)){
@@ -85,7 +86,8 @@ class _MetroAppState extends State<MetroApp> {
                     case '/register':
                        return MaterialPageRoute(builder: (context)=> RegistrationPage()   );
                        break;
-                    
+                    case '/home':
+                      return MaterialPageRoute(builder: (context)=>UserHomePage()); 
               }
               return MaterialPageRoute(builder: (context)=>LoginPage());
           },

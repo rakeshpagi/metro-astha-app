@@ -5,7 +5,7 @@ class AppUser{
     AppUser.anonymous():this.username='Anonymous'{
         this._isanonymous=true; 
     }
-    get anonymous=>this._isanonymous; 
+    bool get anonymous=>this._isanonymous; 
     AppUser.fromMap(Map m){
         this.username = m['username']; 
         this.mobileno = m['mobileno'];  

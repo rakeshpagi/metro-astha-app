@@ -81,7 +81,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final FocusNode focususer=FocusNode();
-  TextEditingController mobilenocontroller=TextEditingController(),passwordcontroller=TextEditingController();  
+  final TextEditingController mobilenocontroller=TextEditingController(),passwordcontroller=TextEditingController();  
   @override
   Widget build(BuildContext context) {
     
@@ -96,10 +96,15 @@ class _LoginFormState extends State<LoginForm> {
             child: Text('Forgot Password', style: TextStyle(color: Colors.white,),  ),
           )],),
           SizedBox(height:15),
-          MaterialButton(onPressed: (){
+          MaterialButton(onPressed: ()async{
                    
-                   context.read<Session>().login(mobilenocontroller.text,passwordcontroller.text ); 
-                   
+                   context.read<Session>().login(mobilenocontroller.text,passwordcontroller.text ).then((value) {
+                        if(value){
+                            
+                            Navigator.of(context).pushReplacementNamed('/home'); 
+                        }
+                   }); 
+
           }, child: Text('Sign In'),color: Colors.pinkAccent,padding: EdgeInsets.all(15), )
     ],);
   }
@@ -116,9 +121,9 @@ class LoginField extends StatelessWidget {
     return TextField(
       decoration: InputDecoration(prefixIcon: Icon(iconlabel),
               labelText: label,              
-                                             
+                                          
         ), 
-          obscureText: obscure,
+          obscureText: obscure,controller: textEditingController
         );          
   }
 }

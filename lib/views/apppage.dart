@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:metro_astha/viewutils/viewutils.dart';
 import 'package:provider/provider.dart';
 
 
@@ -30,22 +31,31 @@ class MetroAppPageState extends State {
                       value: messageHandler,
                       child: Stack(children: [
                 buildpage(context),
-                Consumer<AppState>(builder: (context,state,child){
-                    return Visibility(child: LinearProgressIndicator(),visible: state.busy,);
-                }, ),
-                Consumer<MessageHandler>(
-                        builder:(context,handler,child)=> ListView.builder(  
-                         shrinkWrap: true,
-                         itemBuilder: (context,i){
-                           return Card(
-                               child: Container(
-                                   padding: EdgeInsets.all(8),
-                                   color: Colors.white,
-                                   child: Text(messageHandler.messages[i].title,style: Theme.of(context).textTheme.headline5,),
-                               ),
-                           );
-                       },itemCount:messageHandler.messages.length ,),
+               
+                SafeArea(
+                                  child: Consumer<MessageHandler>(
+                          builder:(context,handler,child)=> 
+                          ListView.builder(  
+                           padding: EdgeInsets.all(8),
+                           shrinkWrap: true,
+                           itemBuilder: (context,i){
+                             return AppMessage(messageHandler.messages[i]);
+                         },itemCount:messageHandler.messages.length ,),
+                  ),
                 ),
+                 Consumer<AppState>(builder: (context,state,child){
+                    return Visibility(child: Column(
+                      children: [
+                        LinearProgressIndicator(),
+                        Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              color: Colors.black.withOpacity(0.5)
+                          ),
+                        )
+                      ],
+                    ),visible: state.busy,);
+                }, ),
                 
         ],),
           ),      

@@ -38,6 +38,9 @@ class RegistrationPageState extends MetroAppPageState {
                         
                         var user = await context.read<Session>().doregister(newuser); 
                         print("Response ${user['username']} ");
+                        if(user!=null){
+                            Navigator.of(context).pop(); 
+                        }
                       },child: Text("Register"),padding: EdgeInsets.all(15),
               )
            ], ),)
