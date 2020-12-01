@@ -42,6 +42,7 @@ class Session{
                   if(rusers.docs.length>0){
                         var ruser = rusers.docs.first;                                                 
                         user=AppUser(mobileno: ruser.data()['mobileno'],username: ruser.data()['username'] );
+                        database.insert("user", user.toMap()); 
                         completer.complete(true);
                         appState.setfree();
                   }else{
@@ -72,9 +73,12 @@ class Session{
                   sendSuccessMessage('SuccessFully Registered',subtitle:newuser.username);
                   return await result.get() ;  
         }
-        logout(){
+        logout()async{
             if(!user.anonymous){
-                user=AppUser.anonymous(); 
+                appState.setbusy(); 
+                await database.delete("user"); 
+                user=AppUser.anonymous();
+                appState.setfree(); 
             }
         }
         get messagestream=>messaging.stream;

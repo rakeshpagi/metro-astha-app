@@ -26,21 +26,25 @@ class MetroAppPageState extends State {
   @override
   Widget build(BuildContext context) {  
          
-    return Scaffold(              
+    return Scaffold(    
+          appBar: getAppBar(),
+          bottomNavigationBar: getBottomNavigationBar(), 
+          floatingActionButton: getFloatingActionButton() ,               
           body: ChangeNotifierProvider.value(
                       value: messageHandler,
                       child: Stack(children: [
                 buildpage(context),
                
-                SafeArea(
-                                  child: Consumer<MessageHandler>(
-                          builder:(context,handler,child)=> 
+                SafeArea(                           
+                          child: Consumer<MessageHandler>(
+                            builder:(context,handler,child)=> 
                           ListView.builder(  
                            padding: EdgeInsets.all(8),
                            shrinkWrap: true,
                            itemBuilder: (context,i){
                              return AppMessage(messageHandler.messages[i]);
-                         },itemCount:messageHandler.messages.length ,),
+                         },itemCount:messageHandler.messages.length ,
+                         ),
                   ),
                 ),
                  Consumer<AppState>(builder: (context,state,child){
@@ -66,6 +70,17 @@ class MetroAppPageState extends State {
   Widget buildpage(BuildContext context){
              return Container();
   }
+
+  getBottomNavigationBar(){
+       return null ;
+  }
+  Widget getFloatingActionButton(){
+       return null;
+  }
+  PreferredSizeWidget getAppBar(){
+       return null; 
+  }
+
 }
 
 class  MessageHandler extends ChangeNotifier{

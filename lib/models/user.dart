@@ -12,5 +12,5 @@ class AppUser{
         this.password=m['password']; 
     }
     
-    toMap()=>{"username":username,"mobileno":mobileno,"password":password};
+    toMap()=>{"username":username,"mobileno":mobileno};
 }

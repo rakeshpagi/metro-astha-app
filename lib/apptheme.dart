@@ -8,8 +8,9 @@ var apptheme=ThemeData(
     accentColor: Color(0xffFF4081),    
     brightness: Brightness.light,    
     buttonTheme: ButtonThemeData(buttonColor: Color(0xffFF4081),textTheme: ButtonTextTheme.primary ),    
-    
-     buttonColor:  Color(0xffFF4081)
+    iconTheme: IconThemeData(color: Colors.grey),
+     buttonColor:  Color(0xffFF4081),
+     
 );
 
 var appthemedark=ThemeData.dark().copyWith(
