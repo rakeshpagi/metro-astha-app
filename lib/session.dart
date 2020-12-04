@@ -17,11 +17,12 @@ class Session{
         get anonymous=>this.user.anonymous; 
          UserCredential userCredential;
          StreamController<Message> messaging = StreamController.broadcast(); 
-        start()async {
+        Future<bool> start()async {
 
                await Firebase.initializeApp();                   
               userCredential = await FirebaseAuth.instance.signInAnonymously();
               firestore=FirebaseFirestore.instance; 
+              return true; 
         }
         sendMessage(String m){
               messaging.sink.add(Message(m));
@@ -61,14 +62,19 @@ class Session{
                     appState.setfree();
                     return null; 
                  }
+                 if(newuser.password==''){
+                    sendErrorMessage('Password Cannot be blank');
+                    appState.setfree(); 
+                    return ; 
+                 }
                  if(list.docs.length>0){
                       print('Already Registered'); 
                       sendErrorMessage('Already Registered',subtitle:newuser.mobileno) ; 
                       appState.setfree();
                       return list.docs.first ;
                  }
-
-                  var result = await users.add(newuser.toMap());
+                  
+                  var result = await users.add(newuser.toRegisterMap());
                   appState.setfree(); 
                   sendSuccessMessage('SuccessFully Registered',subtitle:newuser.username);
                   return await result.get() ;  

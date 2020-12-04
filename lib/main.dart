@@ -16,14 +16,13 @@ import 'package:sqflite/sqflite.dart';
 
 void main() async{
     WidgetsFlutterBinding.ensureInitialized(); 
-    await Firebase.initializeApp(); 
-    
+    await Firebase.initializeApp();     
     var dbpath=await getDatabasesPath() ; 
     var dbstore=join(dbpath,'appuser');
     if(!await databaseExists(dbstore)){
         print("Database NOt found ");  
     }else{
-         deleteDatabase(dbstore); 
+       //  deleteDatabase(dbstore); 
     }
     Database database; 
     
@@ -52,7 +51,7 @@ void main() async{
         }
     ).whenComplete(() {
         Session session=Session(database,user); 
-        session.start(); 
+        //session.start(); 
         runApp(MetroApp(session));
         print("App Started"); 
     });
@@ -69,6 +68,7 @@ class MetroApp extends StatefulWidget {
 }
 
 class _MetroAppState extends State<MetroApp> {
+  Future<bool> start ; 
   @override
   void dispose() {
     
@@ -76,37 +76,46 @@ class _MetroAppState extends State<MetroApp> {
     widget.session.dispose();
   }
   @override
+  void initState() {
+    
+    super.initState();
+    start=widget.session.start(); 
+  }
+  @override
   Widget build(BuildContext context) {
     
-    return MultiProvider(providers: [
-        ChangeNotifierProvider.value(value: widget.session.appState                        
+    return FutureBuilder (
+          future: start,
+          builder: (context,snap)=>!snap.hasData? Center(child: CircularProgressIndicator(),) :MultiProvider(providers: [
+          ChangeNotifierProvider.value(value: widget.session.appState                        
+          ),
+          Provider<Session>.value(value: widget.session)
+          
+      ]  ,
+        builder:(context,child)=>MaterialApp(
+            theme: apptheme,
+            onGenerateRoute: (settings){
+                switch(settings.name){
+                     case '/':
+                        return MaterialPageRoute(builder: (context)=> widget.session.user.anonymous?LoginPage():UserHomePage() );
+                        break;
+                      case '/register':
+                         return MaterialPageRoute(builder: (context)=> RegistrationPage()   );
+                         break;
+                      case '/home':
+                        return MaterialPageRoute(builder: (context)=>UserHomePage()); 
+                        break; 
+                      case '/login':
+                        return MaterialPageRoute(builder: (context)=>LoginPage()); 
+                        break;
+                      case '/newgrievance':
+                        return MaterialPageRoute(builder: (context)=>NewGrievancePage()); 
+                }
+                return MaterialPageRoute(builder: (context)=>LoginPage());
+            },
         ),
-        Provider<Session>.value(value: widget.session)
-        
-    ]  ,
-      builder:(context,child)=>MaterialApp(
-          theme: apptheme,
-          onGenerateRoute: (settings){
-              switch(settings.name){
-                   case '/':
-                      return MaterialPageRoute(builder: (context)=> widget.session.user.anonymous?LoginPage():UserHomePage() );
-                      break;
-                    case '/register':
-                       return MaterialPageRoute(builder: (context)=> RegistrationPage()   );
-                       break;
-                    case '/home':
-                      return MaterialPageRoute(builder: (context)=>UserHomePage()); 
-                      break; 
-                    case '/login':
-                      return MaterialPageRoute(builder: (context)=>LoginPage()); 
-                      break;
-                    case '/newgrievance':
-                      return MaterialPageRoute(builder: (context)=>NewGrievancePage()); 
-              }
-              return MaterialPageRoute(builder: (context)=>LoginPage());
-          },
-      ),
 
+      ),
     );
   }
 }

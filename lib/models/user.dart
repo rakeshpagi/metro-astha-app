@@ -13,4 +13,5 @@ class AppUser{
     }
     
     toMap()=>{"username":username,"mobileno":mobileno};
+    toRegisterMap()=>{"username":username,"mobileno":mobileno,"password":password};
 }

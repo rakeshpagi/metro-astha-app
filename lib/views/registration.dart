@@ -30,7 +30,7 @@ class RegistrationPageState extends MetroAppPageState {
               passwordfield,
               SizedBox(height: 25,),
               RaisedButton(onPressed: ()async{
-                      print("Saving  ${namecontroller.text}");
+                      print("Saving  ${namecontroller.text} : PASSWORD ${passwordcontroller.text} ");
                       AppUser newuser=AppUser(mobileno: mobilenocontroller.text,
                         username: namecontroller.text,
                         password: passwordcontroller.text

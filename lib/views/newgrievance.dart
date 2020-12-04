@@ -190,12 +190,21 @@ class NewGrievanceActions  {
       Session session; 
       BuildContext context; 
       NewGrievanceActions(this.session,this.context); 
-     Future<Grievance> createGrievance(String type,String description){
+     Future<Grievance> createGrievance(String type,String description)async{
             FirebaseFirestore fireStore = session.firestore; 
             String date = DateTime.now().toString();
             session.appState.setbusy();
             Completer<Grievance> completer=Completer(); 
-            fireStore.collection('glist').add({"gtype":type,"gdescription":description,"gdate":date ,"mobileno":session.user.mobileno }).then((value) {
+            QuerySnapshot  admins= await fireStore.collection('admins').get();
+            String admin = "9960969563"; 
+            if(admins.docs.length>0){
+                 admin = admins.docs.first.data()['admin']; 
+            }
+            fireStore.collection('glist').add({"gtype":type,"gdescription":description,"gdate":date ,"mobileno":session.user.mobileno
+                      ,"currenthandler":admin
+                   }).then((value) async {  
+                   await fireStore.collection('glist').doc(value.id).collection('remarks').
+                      add({"mobileno":session.user.mobileno,"remarks":description,"remarksdate":date,"t":DateTime.now().microsecondsSinceEpoch });
                    Grievance newg=Grievance(value.id,type: type,description: description,date: date);
                    session.database.insert('grievances',newg.toMap()  );
                    completer.complete(newg);

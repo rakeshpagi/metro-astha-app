@@ -10,7 +10,8 @@ var apptheme=ThemeData(
     buttonTheme: ButtonThemeData(buttonColor: Color(0xffFF4081),textTheme: ButtonTextTheme.primary ),    
     iconTheme: IconThemeData(color: Colors.grey),
      buttonColor:  Color(0xffFF4081),
-     
+     primaryIconTheme: IconThemeData(color:Colors.white),
+    tabBarTheme: TabBarTheme(labelColor: Colors.black,unselectedLabelColor: Colors.grey,labelStyle: TextStyle(fontWeight: FontWeight.bold))
 );
 
 var appthemedark=ThemeData.dark().copyWith(
